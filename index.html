@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Ficha de personagem RPG Semi Deuses com salvamento local, exportacao JSON e versao para impressao.">
+  <title>Ficha RPG - Semi Deuses</title>
+  <link rel="icon" href="assets/olympus-crest.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand-lockup">
+      <img class="brand-crest" src="assets/olympus-crest.svg" alt="Brasao do Olimpo">
+      <div>
+        <span class="eyebrow">Projetec RPG</span>
+        <h1>Ficha Semi Deuses</h1>
+        <p class="brand-subtitle">Arquivo divino para herois, linhagens e destinos lendarios.</p>
+      </div>
+    </div>
+    <div class="profile-actions">
+      <label class="field compact-field">
+        <span>Nome do perfil</span>
+        <input id="profileName" type="text" placeholder="Ex: Lyra nivel 4">
+      </label>
+      <button class="primary" id="saveProfileBtn" type="button">Salvar perfil</button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <aside class="sidebar">
+      <div class="status-card">
+        <span class="status-label">Perfil ativo</span>
+        <strong id="activeProfileName">Novo personagem</strong>
+        <p id="saveStatus">Pronto para editar.</p>
+      </div>
+
+      <nav class="tabs" aria-label="Abas da ficha">
+        <button class="tab is-active" type="button" data-tab="perfil">Perfil</button>
+        <button class="tab" type="button" data-tab="atributos">Atributos</button>
+        <button class="tab" type="button" data-tab="pericias">Pericias</button>
+        <button class="tab" type="button" data-tab="habilidades">Habilidades</button>
+        <button class="tab" type="button" data-tab="equipamentos">Equipamentos</button>
+        <button class="tab" type="button" data-tab="historia">Historia</button>
+        <button class="tab" type="button" data-tab="exportar">Exportar</button>
+      </nav>
+    </aside>
+
+    <section class="content">
+      <section class="panel is-active" id="perfil" data-panel>
+        <div class="sheet-grid">
+          <article class="sheet-card identity-card">
+            <div class="sheet-title blue-line">
+              <span class="sheet-mark">I</span>
+              <h2>Identidade</h2>
+            </div>
+            <div class="identity-fields">
+              <label class="field line-field"><span>Nome</span><input data-path="main.name" type="text"></label>
+              <label class="field line-field"><span>Filiacao</span><input data-path="main.affiliation" type="text"></label>
+              <label class="field line-field"><span>Antecedente</span><input data-path="main.background" type="text"></label>
+              <label class="field line-field"><span>Caminho divino</span><input data-path="main.path" type="text"></label>
+              <label class="field line-field"><span>Nivel</span><input data-path="main.level" type="number" min="0"></label>
+              <label class="field line-field"><span>Bonus de prof.</span><input data-path="main.proficiency" type="number" min="0"></label>
+              <label class="field line-field"><span>Dado de vida</span><input data-path="main.hitDie" type="text"></label>
+              <label class="field line-field"><span>Velocidade</span><input data-path="main.speed" type="number"></label>
+              <label class="field line-field"><span>Atrib. conjuracao</span><input data-path="main.spellcasting" type="text"></label>
+              <label class="field line-field"><span>Mod. conjuracao</span><input data-path="main.spellcastingMod" type="number"></label>
+              <label class="field line-field"><span>DRC</span><input data-path="main.drc" type="number"></label>
+            </div>
+          </article>
+
+          <article class="sheet-card combat-card">
+            <div class="sheet-title red-line">
+              <span class="sheet-mark">C</span>
+              <h2>Combate</h2>
+            </div>
+            <div class="resource-row pv-row">
+              <span>PV</span>
+              <label class="field resource-field"><span>Atual</span><input data-path="main.hpCurrent" type="number"></label>
+              <label class="field resource-field"><span>Maximo</span><input data-path="main.hpMax" type="number"></label>
+              <label class="field resource-field"><span>Temp.</span><input data-path="main.hpTemp" type="number" placeholder="-"></label>
+            </div>
+            <div class="resource-bar"></div>
+            <div class="resource-row mp-row">
+              <span>MP</span>
+              <label class="field resource-field"><span>Atual</span><input data-path="main.mpCurrent" type="number"></label>
+              <label class="field resource-field"><span>Maximo</span><input data-path="main.mpMax" type="number"></label>
+            </div>
+            <div class="combat-stats">
+              <label class="field line-field"><span>Classe de armadura</span><input data-path="main.armorClass" type="number"></label>
+              <label class="field line-field"><span>Iniciativa</span><input data-path="main.initiative" type="number"></label>
+            </div>
+            <div class="divine-favor">
+              <span>Favor divino</span>
+              <div class="favor-dots" data-favor-dots aria-label="Marcadores de favor divino"></div>
+              <small>/ Max</small>
+              <input data-path="main.divineFavorMax" type="number" value="5" aria-label="Favor divino maximo">
+            </div>
+          </article>
+
+          <article class="sheet-card resistance-card">
+            <div class="sheet-title green-line">
+              <span class="sheet-mark">R</span>
+              <h2>Testes de Resistencia</h2>
+            </div>
+            <div id="profileSaves" class="profile-saves"></div>
+            <p class="save-hint">Clique para marcar proficiencia</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel" id="atributos" data-panel>
+        <div class="section-heading">
+          <h2>Atributos e salvaguardas</h2>
+          <p>Modificadores e bonus finais sao calculados automaticamente.</p>
+        </div>
+        <div id="attributesGrid" class="attribute-grid"></div>
+      </section>
+
+      <section class="panel" id="pericias" data-panel>
+        <div class="section-heading">
+          <h2>Pericias</h2>
+          <p>Marque proficiencia ou especializacao para atualizar os bonus.</p>
+        </div>
+        <div id="skillsList" class="skills-list"></div>
+      </section>
+
+      <section class="panel" id="habilidades" data-panel>
+        <div class="section-heading">
+          <h2>Habilidades</h2>
+          <p>Registre poderes, talentos, habilidades de filiacao e caminho.</p>
+        </div>
+        <div class="table-stack">
+          <div class="editable-table" data-table="talents"></div>
+          <div class="editable-table" data-table="affiliationAbilities"></div>
+          <div class="editable-table" data-table="pathAbilities"></div>
+        </div>
+      </section>
+
+      <section class="panel" id="equipamentos" data-panel>
+        <div class="section-heading">
+          <h2>Equipamentos</h2>
+          <p>Controle armas, itens e reliquias do personagem.</p>
+        </div>
+        <div class="table-stack">
+          <div class="editable-table" data-table="weapons"></div>
+          <div class="editable-table" data-table="equipment"></div>
+          <div class="editable-table" data-table="relics"></div>
+        </div>
+      </section>
+
+      <section class="panel" id="historia" data-panel>
+        <div class="section-heading">
+          <h2>Historia e antecedente</h2>
+          <p>Informacoes narrativas para interpretar o personagem.</p>
+        </div>
+        <div class="grid text-grid">
+          <label class="field"><span>Traco</span><textarea data-path="narrative.trait"></textarea></label>
+          <label class="field"><span>Ideal</span><textarea data-path="narrative.ideal"></textarea></label>
+          <label class="field"><span>Vinculo</span><textarea data-path="narrative.bond"></textarea></label>
+          <label class="field"><span>Falha</span><textarea data-path="narrative.flaw"></textarea></label>
+          <label class="field wide"><span>Aparencia</span><textarea data-path="narrative.appearance"></textarea></label>
+          <label class="field wide"><span>Historia</span><textarea data-path="narrative.story" class="large-text"></textarea></label>
+          <label class="field wide"><span>Notas</span><textarea data-path="narrative.notes" class="large-text"></textarea></label>
+          <label class="field"><span>Nome do antecedente</span><input data-path="backgroundInfo.name" type="text"></label>
+          <label class="field"><span>Traco do antecedente</span><textarea data-path="backgroundInfo.trait"></textarea></label>
+          <label class="field"><span>Vinculo do antecedente</span><textarea data-path="backgroundInfo.bond"></textarea></label>
+        </div>
+      </section>
+
+      <section class="panel" id="exportar" data-panel>
+        <div class="section-heading">
+          <h2>Perfis e arquivos</h2>
+          <p>Salve multiplos personagens, importe JSON ou gere a ficha impressa.</p>
+        </div>
+        <div class="export-layout">
+          <div class="toolbar-card">
+            <button id="newProfileBtn" type="button">Novo perfil</button>
+            <button id="loadProfileBtn" type="button">Carregar perfil</button>
+            <button id="deleteProfileBtn" type="button" class="danger">Excluir perfil</button>
+            <button id="exportJsonBtn" type="button">Exportar perfil JSON</button>
+            <label class="file-button">
+              Importar perfil JSON
+              <input id="importJsonInput" type="file" accept="application/json,.json">
+            </label>
+            <button id="printProfileBtn" type="button">Gerar ficha para impressao</button>
+          </div>
+          <label class="field">
+            <span>Lista de perfis salvos</span>
+            <select id="profilesSelect" size="8"></select>
+          </label>
+          <pre id="jsonPreview" class="json-preview" aria-label="Previa JSON"></pre>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="data/defaultCharacter.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>

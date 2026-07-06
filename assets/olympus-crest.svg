@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title desc">
+  <title id="title">Brasao do Olimpo</title>
+  <desc id="desc">Brasao dourado com coluna, raio e louros inspirado no Olimpo.</desc>
+  <defs>
+    <linearGradient id="gold" x1="22" y1="10" x2="76" y2="90" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff0a8"/>
+      <stop offset="0.42" stop-color="#d8a341"/>
+      <stop offset="1" stop-color="#7b4c18"/>
+    </linearGradient>
+    <linearGradient id="sky" x1="20" y1="12" x2="74" y2="82" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f8fbff"/>
+      <stop offset="0.5" stop-color="#9bc7ff"/>
+      <stop offset="1" stop-color="#283c73"/>
+    </linearGradient>
+  </defs>
+  <path fill="#15101a" d="M48 4 84 17v26c0 23-14 39-36 49C26 82 12 66 12 43V17L48 4Z"/>
+  <path fill="url(#gold)" d="M48 8 79 20v23c0 19-11 34-31 44C28 77 17 62 17 43V20L48 8Z"/>
+  <path fill="#181522" d="M48 15 72 24v19c0 15-8 27-24 36-16-9-24-21-24-36V24l24-9Z"/>
+  <path fill="url(#sky)" d="M48 18 68 26v17c0 12-6 22-20 30-14-8-20-18-20-30V26l20-8Z"/>
+  <path fill="#fff7cf" d="M43 32h10v31H43zM36 63h24v5H36zM38 28h20l-4-5H42l-4 5Z"/>
+  <path fill="#8b5b20" d="M39 36h3v24h-3zM54 36h3v24h-3z"/>
+  <path fill="#f7d66f" d="M51 29 43 47h8l-5 17 13-23h-8l6-12h-6Z"/>
+  <path fill="none" stroke="#fff0a8" stroke-linecap="round" stroke-width="3" d="M31 53c-6-3-9-8-9-14M65 53c6-3 9-8 9-14"/>
+  <path fill="none" stroke="#7b4c18" stroke-linecap="round" stroke-width="2" d="M30 54c2-7 5-12 10-16M66 54c-2-7-5-12-10-16"/>
+</svg>

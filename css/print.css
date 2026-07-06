@@ -1,0 +1,409 @@
+@page {
+  size: A4;
+  margin: 10mm;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #e8dfcf;
+  color: #1d1a16;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 10.5px;
+}
+
+.print-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  padding: 12px;
+  background: #efe6d7;
+  border-bottom: 1px solid #c9b28b;
+}
+
+.print-actions button,
+.print-actions a {
+  border: 1px solid #9b7a4d;
+  border-radius: 4px;
+  background: #fffaf0;
+  color: #1d1a16;
+  padding: 8px 12px;
+  text-decoration: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.sheet {
+  max-width: 190mm;
+  margin: 0 auto;
+  padding: 7mm 0;
+}
+
+.print-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  border: 2px solid #9b7a4d;
+  border-top: 6px solid #2f6fa8;
+  background: #fffaf0;
+  padding: 8px 10px;
+  margin-bottom: 7px;
+}
+
+.print-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.print-brand img {
+  width: 42px;
+  height: 42px;
+}
+
+.print-brand span,
+.box strong,
+.print-section h2,
+.resource-print span,
+.stat-print span,
+.favor-print span {
+  color: #7b562d;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.print-title h1 {
+  margin: 0;
+  color: #143c5f;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.print-title p {
+  margin: 3px 0 0;
+}
+
+.print-seal {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 2px solid #c38a2e;
+  border-radius: 50%;
+  background: #fff2d2;
+}
+
+.print-seal strong {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.print-seal span {
+  color: #7b562d;
+  font-size: 8px;
+  text-transform: uppercase;
+}
+
+.print-section {
+  break-inside: avoid;
+  border: 1px solid #c9b28b;
+  border-top: 4px solid #2f6fa8;
+  background: #fffaf0;
+  margin-bottom: 7px;
+}
+
+.print-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  border-bottom: 1px solid #d7c3a1;
+  background: #f5ead8;
+  padding: 4px 7px;
+}
+
+.print-section h2::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: #d7c3a1;
+}
+
+.print-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  padding: 6px;
+}
+
+.box {
+  min-height: 34px;
+  border: 1px solid #d3bb93;
+  background: #fffdf7;
+  padding: 4px 5px;
+}
+
+.box strong {
+  display: block;
+  margin-bottom: 3px;
+}
+
+.combat-print {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr 0.55fr 0.75fr 1.25fr;
+  gap: 6px;
+  margin-bottom: 7px;
+}
+
+.resource-print,
+.stat-print,
+.favor-print {
+  break-inside: avoid;
+  border: 1px solid #c9b28b;
+  background: #fffaf0;
+  padding: 6px;
+}
+
+.resource-print {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr 1fr;
+  gap: 5px;
+  align-items: center;
+}
+
+.mp-print {
+  grid-template-columns: auto 1fr 1fr;
+}
+
+.hp-print {
+  border-top: 4px solid #c64635;
+}
+
+.mp-print {
+  border-top: 4px solid #2f6fa8;
+}
+
+.resource-print div {
+  display: grid;
+  gap: 2px;
+  text-align: center;
+}
+
+.resource-print strong,
+.stat-print strong {
+  display: block;
+  color: #111111;
+  font-size: 17px;
+  text-align: center;
+}
+
+.resource-print small {
+  color: #8b6a45;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.stat-print {
+  border-top: 4px solid #7c8f53;
+}
+
+.stat-print strong {
+  margin-top: 4px;
+  font-size: 20px;
+}
+
+.favor-print {
+  border-top: 4px solid #c38a2e;
+}
+
+.favor-print div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-top: 7px;
+}
+
+.favor-print i {
+  width: 11px;
+  height: 11px;
+  border: 1.5px solid #c38a2e;
+  border-radius: 50%;
+}
+
+.favor-print i.filled {
+  background: #c38a2e;
+}
+
+.print-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+.attribute-print-grid,
+.save-print-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  padding: 6px;
+}
+
+.attribute-print {
+  border: 1px solid #d3bb93;
+  background: #fffdf7;
+  text-align: center;
+  padding: 4px;
+}
+
+.attribute-print span {
+  display: block;
+  color: #7b562d;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.attribute-print strong {
+  display: block;
+  margin: 2px 0;
+  color: #143c5f;
+  font-size: 23px;
+}
+
+.attribute-print small {
+  display: block;
+  border-radius: 3px;
+  background: #2f6fa8;
+  color: #ffffff;
+  padding: 2px;
+  font-weight: 800;
+}
+
+.save-print {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: 5px;
+  border-bottom: 1px solid #d7c3a1;
+  padding: 4px 0;
+}
+
+.save-print i {
+  color: #2f6fa8;
+  font-style: normal;
+  text-align: center;
+}
+
+.save-print span {
+  color: #7b562d;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.save-print strong {
+  border: 1px solid #d3bb93;
+  background: #fffdf7;
+  padding: 2px;
+  text-align: center;
+}
+
+.skills-print {
+  border-top-color: #7c8f53;
+}
+
+.skill-print-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0 8px;
+  padding: 6px;
+}
+
+.skill-print-grid div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 36px 34px;
+  gap: 5px;
+  align-items: center;
+  border-bottom: 1px solid #d7c3a1;
+  min-height: 21px;
+}
+
+.skill-print-grid span {
+  overflow-wrap: anywhere;
+}
+
+.skill-print-grid small {
+  color: #8b6a45;
+  font-size: 8px;
+  text-transform: uppercase;
+}
+
+.skill-print-grid strong {
+  border: 1px solid #d3bb93;
+  background: #fffdf7;
+  padding: 2px;
+  text-align: center;
+}
+
+.section-body {
+  padding: 6px;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+.print-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.print-table th,
+.print-table td {
+  border: 1px solid #d3bb93;
+  padding: 3px 4px;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.print-table th {
+  background: #f5ead8;
+  color: #7b562d;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+@media print {
+  body {
+    background: #ffffff;
+    font-size: 9.5px;
+  }
+
+  .print-actions {
+    display: none;
+  }
+
+  .sheet {
+    max-width: none;
+    padding: 0;
+  }
+
+  .print-title,
+  .print-section,
+  .resource-print,
+  .stat-print,
+  .favor-print {
+    box-shadow: none;
+  }
+}
