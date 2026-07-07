@@ -189,7 +189,7 @@
     if (!container) return;
 
     container.innerHTML = Object.entries(state.attributes).map(([key, attribute]) => {
-      const total = modifier(attribute.value) + (attribute.saveProficient ? proficiencyBonus() : 0);
+      const total = modifier(attribute.value);
       return `
         <label class="save-test${attribute.saveProficient ? " is-proficient" : ""}">
           <input type="checkbox" data-profile-save-prof="${key}" ${attribute.saveProficient ? "checked" : ""}>
@@ -327,7 +327,7 @@
     Object.keys(state.attributes).forEach((key) => {
       const attribute = state.attributes[key];
       const mod = modifier(attribute.value);
-      const saveTotal = mod + (attribute.saveProficient ? proficiencyBonus() : 0);
+      const saveTotal = mod;
       const modElement = root.querySelector(`[data-attribute-mod="${key}"]`);
       const saveElement = root.querySelector(`[data-save-total="${key}"]`);
       const profileSaveElement = root.querySelector(`[data-profile-save-total="${key}"]`);
@@ -619,7 +619,7 @@
           <h2>Salvaguardas</h2>
           <div class="save-print-grid${!blankMode ? " selected-saves-grid" : ""}">
             ${printedSaves.length
-              ? printedSaves.map(([key, attr]) => printSave(attributeLabels[key], attr.saveProficient, modifier(attr.value) + (attr.saveProficient ? proficiencyBonus(character) : 0), blankMode)).join("")
+              ? printedSaves.map(([key, attr]) => printSave(attributeLabels[key], attr.saveProficient, modifier(attr.value), blankMode)).join("")
               : `<p class="empty-print-note">Nenhuma salvaguarda proficiente selecionada.</p>`}
           </div>
         </section>
