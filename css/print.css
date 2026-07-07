@@ -257,6 +257,20 @@ body {
   padding: 8px;
 }
 
+.selected-saves-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.empty-print-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  border: 1px dashed #d3bb93;
+  background: #fffdf7;
+  color: #8b6a45;
+  padding: 8px;
+  font-style: italic;
+}
+
 .attribute-print {
   border: 1px solid #d3bb93;
   background: #fffdf7;

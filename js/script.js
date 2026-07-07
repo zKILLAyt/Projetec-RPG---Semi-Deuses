@@ -539,6 +539,7 @@
     const manualCombatFields = true;
     const character = normalizeCharacter(blankMode ? defaultCharacter : loadDraft() || defaultCharacter);
     const attrs = Object.entries(character.attributes);
+    const printedSaves = blankMode ? attrs : attrs.filter(([, attr]) => attr.saveProficient);
     const importantAbilities = [
       ...character.tables.affiliationAbilities,
       ...character.tables.pathAbilities,
@@ -616,8 +617,10 @@
 
         <section class="print-section">
           <h2>Salvaguardas</h2>
-          <div class="save-print-grid">
-            ${attrs.map(([key, attr]) => printSave(attributeLabels[key], attr.saveProficient, modifier(attr.value) + (attr.saveProficient ? proficiencyBonus(character) : 0), blankMode)).join("")}
+          <div class="save-print-grid${!blankMode ? " selected-saves-grid" : ""}">
+            ${printedSaves.length
+              ? printedSaves.map(([key, attr]) => printSave(attributeLabels[key], attr.saveProficient, modifier(attr.value) + (attr.saveProficient ? proficiencyBonus(character) : 0), blankMode)).join("")
+              : `<p class="empty-print-note">Nenhuma salvaguarda proficiente selecionada.</p>`}
           </div>
         </section>
       </div>
