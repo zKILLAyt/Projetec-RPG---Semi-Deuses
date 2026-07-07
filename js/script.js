@@ -121,8 +121,9 @@
     root.getElementById("exportJsonBtn").addEventListener("click", exportJson);
     root.getElementById("importJsonInput").addEventListener("change", importJson);
     root.getElementById("printProfileBtn").addEventListener("click", () => {
+      const printMode = root.getElementById("printMode").value;
       saveDraft();
-      window.open("print.html", "_blank");
+      window.open(`print.html?mode=${printMode}`, "_blank");
     });
   }
 
@@ -533,7 +534,10 @@
   function renderPrintSheet() {
     const sheet = root.getElementById("printSheet");
     if (!sheet) return;
-    const character = normalizeCharacter(loadDraft() || defaultCharacter);
+    const printMode = new URLSearchParams(window.location.search).get("mode") || "filled";
+    const blankMode = printMode === "blank";
+    const manualCombatFields = true;
+    const character = normalizeCharacter(blankMode ? defaultCharacter : loadDraft() || defaultCharacter);
     const attrs = Object.entries(character.attributes);
     const importantAbilities = [
       ...character.tables.affiliationAbilities,
@@ -545,19 +549,20 @@
       ...character.tables.equipment,
       ...character.tables.relics
     ].slice(0, 12);
+    sheet.classList.toggle("blank-print", blankMode);
 
     sheet.innerHTML = `
       <header class="print-title">
         <div class="print-brand">
           <img src="assets/olympus-crest.svg" alt="">
           <div>
-            <span>Ficha Semi Deuses</span>
-            <h1>${escapeHtml(character.main.name || character.meta.profileName || "Personagem")}</h1>
-            <p>${escapeHtml(character.main.affiliation || "Sem filiacao")} | ${escapeHtml(character.main.path || "Sem caminho")} | Nivel ${numberOrZero(character.main.level)}</p>
+            <span>${blankMode ? "Ficha manual" : "Ficha Semi Deuses"}</span>
+            <h1>${blankMode ? "Ficha em branco" : escapeHtml(character.main.name || character.meta.profileName || "Personagem")}</h1>
+            <p>${blankMode ? "Preencha manualmente durante a mesa" : `${escapeHtml(character.main.affiliation || "Sem filiacao")} | ${escapeHtml(character.main.path || "Sem caminho")} | Nivel ${numberOrZero(character.main.level)}`}</p>
           </div>
         </div>
         <div class="print-seal">
-          <strong>${formatBonus(proficiencyBonus(character))}</strong>
+          <strong>${blankMode ? "" : formatBonus(proficiencyBonus(character))}</strong>
           <span>Prof.</span>
         </div>
       </header>
@@ -565,39 +570,39 @@
       <section class="print-section identity-print">
         <h2>Identificacao</h2>
         <div class="print-grid">
-          ${printBox("Antecedente", character.main.background)}
-          ${printBox("Caminho", character.main.path)}
-          ${printBox("Dado de vida", character.main.hitDie)}
-          ${printBox("Conjuracao", character.main.spellcasting)}
-          ${printBox("Velocidade", character.main.speed)}
-          ${printBox("Mod. Conjuracao", formatBonus(character.main.spellcastingMod || 0))}
-          ${printBox("DRC", character.main.drc)}
+          ${printBox("Antecedente", blankMode ? "" : character.main.background)}
+          ${printBox("Caminho", blankMode ? "" : character.main.path)}
+          ${printBox("Dado de vida", blankMode ? "" : character.main.hitDie)}
+          ${printBox("Conjuracao", blankMode ? "" : character.main.spellcasting)}
+          ${printBox("Velocidade", blankMode ? "" : character.main.speed)}
+          ${printBox("Mod. Conjuracao", blankMode ? "" : formatBonus(character.main.spellcastingMod || 0))}
+          ${printBox("DRC", blankMode || manualCombatFields ? "" : character.main.drc)}
         </div>
       </section>
 
       <section class="combat-print">
         <div class="resource-print hp-print">
           <span>PV</span>
-          <div><strong>${character.main.hpCurrent || 0}</strong><small>Atual</small></div>
-          <div><strong>${character.main.hpMax || 0}</strong><small>Max.</small></div>
-          <div><strong>${character.main.hpTemp || 0}</strong><small>Temp.</small></div>
+          <div><strong>${blankMode || manualCombatFields ? "" : character.main.hpCurrent || 0}</strong><small>Atual</small></div>
+          <div><strong>${blankMode || manualCombatFields ? "" : character.main.hpMax || 0}</strong><small>Max.</small></div>
+          <div><strong>${blankMode || manualCombatFields ? "" : character.main.hpTemp || 0}</strong><small>Temp.</small></div>
         </div>
         <div class="resource-print mp-print">
           <span>MP</span>
-          <div><strong>${character.main.mpCurrent || 0}</strong><small>Atual</small></div>
-          <div><strong>${character.main.mpMax || 0}</strong><small>Max.</small></div>
+          <div><strong>${blankMode || manualCombatFields ? "" : character.main.mpCurrent || 0}</strong><small>Atual</small></div>
+          <div><strong>${blankMode || manualCombatFields ? "" : character.main.mpMax || 0}</strong><small>Max.</small></div>
         </div>
         <div class="stat-print">
           <span>CA</span>
-          <strong>${character.main.armorClass || 0}</strong>
+          <strong>${blankMode || manualCombatFields ? "" : character.main.armorClass || 0}</strong>
         </div>
         <div class="stat-print">
           <span>Iniciativa</span>
-          <strong>${formatBonus(character.main.initiative || 0)}</strong>
+          <strong>${blankMode || manualCombatFields ? "" : formatBonus(character.main.initiative || 0)}</strong>
         </div>
         <div class="favor-print">
           <span>Favor divino</span>
-          <div>${favorDots(character.main.divineFavorCurrent, character.main.divineFavorMax)}</div>
+          <div>${favorDots(blankMode ? 0 : character.main.divineFavorCurrent, character.main.divineFavorMax)}</div>
         </div>
       </section>
 
@@ -605,64 +610,74 @@
         <section class="print-section">
           <h2>Atributos</h2>
           <div class="attribute-print-grid">
-            ${attrs.map(([key, attr]) => printAttribute(attributeLabels[key], attr.value, modifier(attr.value))).join("")}
+            ${attrs.map(([key, attr]) => printAttribute(attributeLabels[key], attr.value, modifier(attr.value), blankMode)).join("")}
           </div>
         </section>
 
         <section class="print-section">
           <h2>Salvaguardas</h2>
           <div class="save-print-grid">
-            ${attrs.map(([key, attr]) => printSave(attributeLabels[key], attr.saveProficient, modifier(attr.value) + (attr.saveProficient ? proficiencyBonus(character) : 0))).join("")}
+            ${attrs.map(([key, attr]) => printSave(attributeLabels[key], attr.saveProficient, modifier(attr.value) + (attr.saveProficient ? proficiencyBonus(character) : 0), blankMode)).join("")}
           </div>
         </section>
       </div>
 
       <section class="print-section skills-print">
         <h2>Pericias</h2>
-        <div class="skill-print-grid">
-          ${character.skills.map((skill) => `
-            <div>
-              <span>${escapeHtml(skill.name)}</span>
-              <small>${escapeHtml(attributeLabels[skill.attribute] || "")}</small>
-              <strong>${formatBonus(skillTotal(skill, character))}</strong>
-            </div>
-          `).join("")}
-        </div>
+        ${blankMode ? blankSkillsTable(character.skills) : `
+          <div class="skill-print-grid">
+            ${character.skills.map((skill) => `
+              <div>
+                <span>${escapeHtml(skill.name)}</span>
+                <small>${escapeHtml(attributeLabels[skill.attribute] || "")}</small>
+                <strong>${formatBonus(skillTotal(skill, character))}</strong>
+              </div>
+            `).join("")}
+          </div>
+        `}
       </section>
 
-      <div class="two-col">
+      <div class="two-col${blankMode ? " blank-writing-area" : ""}">
         <section class="print-section">
           <h2>Habilidades principais</h2>
           <div class="section-body">
-            ${printTable(["Nome", "Info", "Descricao"], tableRows(importantAbilities))}
+            ${printTable(
+              ["Nome", "Info", "Descricao"],
+              blankMode ? blankRows(8) : tableRows(importantAbilities),
+              blankMode ? "writing-table" : ""
+            )}
           </div>
         </section>
         <section class="print-section">
           <h2>Equipamentos</h2>
           <div class="section-body">
-            ${printTable(["Item", "Info", "Notas"], tableRows(equipment))}
+            ${printTable(
+              blankMode ? ["Item", "Qtd.", "Notas"] : ["Item", "Info", "Notas"],
+              blankMode ? blankRows(10) : tableRows(equipment),
+              blankMode ? "writing-table equipment-writing-table" : ""
+            )}
           </div>
         </section>
       </div>
     `;
   }
 
-  function printAttribute(label, value, mod) {
+  function printAttribute(label, value, mod, blankMode = false) {
     return `
       <div class="attribute-print">
         <span>${escapeHtml(label)}</span>
-        <strong>${numberOrZero(value)}</strong>
-        <small>${formatBonus(mod)}</small>
+        <strong>${blankMode ? "" : numberOrZero(value)}</strong>
+        <small>${blankMode ? "" : formatBonus(mod)}</small>
       </div>
     `;
   }
 
-  function printSave(label, proficient, total) {
+  function printSave(label, proficient, total, blankMode = false) {
     return `
       <div class="save-print">
-        <i>${proficient ? "&diams;" : "&loz;"}</i>
+        <i>${!blankMode && proficient ? "&diams;" : "&loz;"}</i>
         <span>${escapeHtml(label)}</span>
-        <strong>${formatBonus(total)}</strong>
+        <strong>${blankMode ? "" : formatBonus(total)}</strong>
       </div>
     `;
   }
@@ -678,13 +693,44 @@
     return rows.length ? rows.map((row) => [row.first || "", row.second || "", row.third || ""]) : [["", "", ""]];
   }
 
+  function blankRows(count) {
+    return Array.from({ length: count }, () => ["", "", ""]);
+  }
+
   function printBox(label, value) {
     return `<div class="box"><strong>${escapeHtml(label)}</strong>${escapeHtml(String(value || ""))}</div>`;
   }
 
-  function printTable(headers, rows) {
+  function blankSkillsTable(skills) {
     return `
-      <table class="print-table">
+      <table class="print-table blank-skills-table">
+        <thead>
+          <tr>
+            <th>Pericia</th>
+            <th>Atr.</th>
+            <th>Prof.</th>
+            <th>Esp.</th>
+            <th>Bonus</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${skills.map((skill) => `
+            <tr>
+              <td>${escapeHtml(skill.name)}</td>
+              <td>${escapeHtml(attributeLabels[skill.attribute] || "")}</td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    `;
+  }
+
+  function printTable(headers, rows, className = "") {
+    return `
+      <table class="print-table ${className}">
         <thead><tr>${headers.map((header) => `<th>${escapeHtml(header)}</th>`).join("")}</tr></thead>
         <tbody>${rows.map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml(String(cell || ""))}</td>`).join("")}</tr>`).join("")}</tbody>
       </table>
